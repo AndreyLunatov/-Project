@@ -1,0 +1,26 @@
+/*Simple REST API for task management
+
+ASP.NET Core 8 REST API Entity Framework Core SQLite Swagger / OpenAPI CRUD GitHub description
+A simple REST API built with ASP.NET Core 8 for managing personal tasks. Supports full CRUD operations, uses Entity Framework Core with SQLite for data persistence. Swagger UI included for easy endpoint testing.
+Sample endpoint*/
+
+
+
+[HttpPost]
+public async Task<IActionResult> CreateTodo([FromBody] CreateTodoDto dto)
+{
+    var todo = new Todo
+    {
+        Title = dto.Title,
+        IsCompleted = false,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    _context.Todos.Add(todo);
+    await _context.SaveChangesAsync();
+
+    return CreatedAtAction(nameof(GetById), new { id = todo.Id }, todo);
+}
+
+/*What I learned
+Learned how to structure a Web API project, work with EF Core migrations, and set up Swagger documentation from scratch.*/
