@@ -1,0 +1,26 @@
+/*WeatherTracker.API
+Weather data aggregator with external API integration
+
+ASP.NET Core 8 HttpClient OpenWeatherMap API Dependency Injection Caching IMemoryCache GitHub description
+A backend service that fetches real-time weather data from OpenWeatherMap API and caches responses using IMemoryCache to reduce external requests. Built to practice HttpClient, DI, and clean service layer architecture.
+
+Sample service*/
+
+
+public async Task<WeatherDto> GetWeatherAsync(string city)
+{
+    var cacheKey = $"weather_{city.ToLower()}";
+
+    if (_cache.TryGetValue(cacheKey, out WeatherDto cached))
+        return cached;
+
+    var response = await _httpClient.GetFromJsonAsync<WeatherDto>(
+        $"weather?q={city}&appid={_apiKey}&units=metric");
+
+    _cache.Set(cacheKey, response, TimeSpan.FromMinutes(10));
+    return response;
+}
+
+/*What I learned
+
+Practiced working with third-party APIs, typed HttpClient registration, and in-memory caching to optimize API response times.*/
